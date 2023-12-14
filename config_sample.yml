@@ -1,0 +1,4 @@
+input_data_path: "hoge.tsv"
+label_data_path: "huga.tsv"
+output_dir_path: "output"
+feature_num: -1
