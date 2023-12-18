@@ -1,5 +1,6 @@
 import yaml
 import os
+import pandas as pd
 
 
 def is_table(file_path: str):
@@ -38,7 +39,7 @@ def read_config(config_path: str):
     return config
 
 
-def makedir(config: dict):
+def specify_output_path(config: dict):
     
     output_dir_path = config['output_dir_path']
     feature_num = config['feature_num']
@@ -48,8 +49,23 @@ def makedir(config: dict):
     else:
         subdir = f'f_{feature_num}'
     
-    os.makedirs(f'{output_dir_path}/{subdir}/figure', exist_ok=True)
-    os.makedirs(f'{output_dir_path}/{subdir}/model', exist_ok=True)
-    os.makedirs(f'{output_dir_path}/{subdir}/output', exist_ok=True)
+    return f'{output_dir_path}/{subdir}/figure', f'{output_dir_path}/{subdir}/model'
+
+
+def load_dataset(dataset_path: str):
     
-    return None
+    ext = os.path.splitext(dataset_path)[1][1:]
+    if (ext == 'csv'):
+        dataset = pd.read_csv(dataset_path)
+    if (ext == 'tsv'):
+        dataset = pd.read_table(dataset_path)
+    
+    return dataset
+
+
+def load_datasets(config: dict):
+    
+    input_data = load_dataset(config['input_data_path'])
+    label_data = load_dataset(config['label_data_path'])
+    
+    return input_data, label_data
