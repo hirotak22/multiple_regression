@@ -35,6 +35,12 @@ def read_config(config_path: str):
             raise ValueError('\"feature_num\" must be integer')
     else:
         config['feature_num'] = -1
+    
+    if ('figure_format' in config.keys()):
+        if (config['figure_format'] not in ['png', 'ps', 'pdf', 'svg']):
+            raise ValueError('\"figure_format\" must be any of png, ps, pdf, svg')
+    else:
+        config['figure_format'] = 'png'
 
     return config
 
@@ -49,7 +55,7 @@ def specify_output_path(config: dict):
     else:
         subdir = f'f_{feature_num}'
     
-    return f'{output_dir_path}/{subdir}/figure', f'{output_dir_path}/{subdir}/model'
+    return f'{output_dir_path}/{subdir}'
 
 
 def load_dataset(dataset_path: str):

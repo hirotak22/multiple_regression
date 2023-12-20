@@ -3,9 +3,10 @@ import pandas as pd
 import itertools
 from sklearn.linear_model import LinearRegression
 import pickle
+import json
 
 
-def fit_linear_regression(X: np.ndarray(), y: np.ndarray()):
+def fit_linear_regression(X: np.ndarray, y: np.ndarray):
     
     reg = LinearRegression().fit(X, y)
     r2score = reg.score(X, y)
@@ -13,15 +14,13 @@ def fit_linear_regression(X: np.ndarray(), y: np.ndarray()):
     return reg, r2score
 
 
-def iterate_feature_set(input_data: pd.DataFrame(), label_data: pd.DataFrame(), feature_num: int):
+def iterate_feature_set(input_data: pd.DataFrame, label_data: pd.DataFrame, feature_num: int):
     
     log_iteration = []
     
     for label in label_data.columns:
-        print(label)
-        
-        for feature_set in itertools.combinations(input_data.columns, feature_num):
-            print(feature_set)
+        for feature_set in itertools.combinations(input_data.columns.to_list(), feature_num):
+            feature_set = list(feature_set)
             input_data_selected = input_data[feature_set]
             
             reg, r2score = fit_linear_regression(input_data_selected.values, label_data[label].values)
@@ -30,10 +29,19 @@ def iterate_feature_set(input_data: pd.DataFrame(), label_data: pd.DataFrame(), 
     return pd.DataFrame(log_iteration, columns=([f'feature_{i+1}' for i in range(feature_num)] + ['label', 'R2score']))
 
 
-def optimize_feature_set(input_data: pd.DataFrame(), label_data: pd.DataFrame(), feature_num: int, output_dir_path: str):
+def summarize_iteration_result(input_data: pd.DataFrame, label_data: pd.DataFrame, feature_num: int, output_subdir_path: str):
     
     log_iteration = iterate_feature_set(input_data, label_data, feature_num)
-    log_iteration.to_csv(f'{output_dir_path}/log_iteration.csv', header=True, index=False)
+    log_iteration.to_csv(f'{output_subdir_path}/log_iteration.csv', header=True, index=False)
+    
+    return log_iteration
+
+
+def optimize_feature_set(input_data: pd.DataFrame, label_data: pd.DataFrame, feature_num: int, output_subdir_path: str):
+    
+    log_iteration = summarize_iteration_result(input_data, label_data, feature_num, output_subdir_path)
+    
+    optimization_result = {}
     
     for label in label_data.columns:
         log_iteration_extracted = log_iteration.query(f'label == "{label}"')
@@ -41,7 +49,35 @@ def optimize_feature_set(input_data: pd.DataFrame(), label_data: pd.DataFrame(),
         best_feature_set = log_iteration_extracted.iloc[1, :feature_num].to_list()
         
         best_reg, best_r2score = fit_linear_regression(input_data[best_feature_set].values, label_data[label].values)
-        model_path = f'{output_dir_path}/model/best_model_{label}.pkl'
-        pickle.dump(best_reg, model_path)
+        output_model_path = f'{output_subdir_path}/model/best_model_{label}.pkl'
+        pickle.dump(best_reg, open(output_model_path, mode='wb'))
+        
+        optimization_result[label] = {'feature_set': best_feature_set, 'R2score': best_r2score, 'model_path': output_model_path}
+    
+    json.dump(optimization_result, open(f'{output_subdir_path}/optimization_result.json', mode='w'), indent=2)
     
     return None
+
+
+def use_all_features(input_data: pd.DataFrame, label_data: pd.DataFrame, output_subdir_path: str):
+    
+    result = {}
+
+    for label in label_data.columns:
+        reg, r2score = fit_linear_regression(input_data.values, label_data[label].values)
+        output_model_path = f'{output_subdir_path}/model/model_{label}.pkl'
+        pickle.dump(reg, open(output_model_path, mode='wb'))
+        
+        result[label] = {'feature_set': input_data.columns.to_list(), 'R2score': r2score, 'model_path': output_model_path}
+    
+    json.dump(result, open(f'{output_subdir_path}/result.json', mode='w'), indent=2)
+    
+    return None
+
+
+def inference(model_path: str, X: np.ndarray):
+    
+    reg = pickle.load(open(model_path, mode='rb'))
+    preds = reg.predict(X)
+    
+    return preds
