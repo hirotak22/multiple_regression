@@ -1,9 +1,14 @@
 # pipeline_LinearRegression
 ## Installation
 ```
-$ linearreg ${config}
+$ git clone https://github.com/hirotak22/pipeline_LinearRegression.git
+$ cd pipeline_LinearRegression
+$ pip install .
 ```
-
+or 
+```
+$ pip install git+https://github.com/hirotak22/pipeline_LinearRegression
+```
 ## Usage
 ```
 $ linearreg ${config_file_path}
