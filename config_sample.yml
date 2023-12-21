@@ -1,4 +1,5 @@
-input_data_path: "hoge.tsv"
-label_data_path: "huga.tsv"
-output_dir_path: "output"
-feature_num: -1
+input_data_path: "data/input_sample.csv"
+label_data_path: "data/label_sample.csv"
+output_dir_path: "result"
+feature_num: 3
+figure_format: "png"

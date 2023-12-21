@@ -1,15 +1,35 @@
+import argparse
 import os
-from LinearRegression.preprocess import *
-from LinearRegression.LinearRegression import *
+from LinearRegression import *
 
 
-config_path = input()
-config = read_config(config_path)
+def main():
+    
+    logger = get_logger()
+    
+    logger.info('read config')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('config', help='config file (*.yml or *.yaml)')
+    args = parser.parse_args()
+    
+    config_path = args.config
+    config = read_config(config_path)
 
-output_figure_dir_path, output_model_dir_path = specify_output_path(config)
-os.makedirs(output_figure_dir_path, exist_ok=True)
-os.makedirs(output_model_dir_path, exist_ok=True)
+    output_subdir_path = specify_output_path(config)
+    os.makedirs(f'{output_subdir_path}/figure', exist_ok=True)
+    os.makedirs(f'{output_subdir_path}/model', exist_ok=True)
 
-input_data, label_data = load_datasets(config)
+    logger.info('load dataset')
+    input_data, label_data = load_datasets(config)
 
-optimize_feature_set(input_data, label_data, config['feature_num'], config['output_dir_path'], output_figure_dir_path, output_model_dir_path)
+    logger.info('optimize linear regression models')
+    feature_num = config['feature_num']
+    if (feature_num != -1):
+        optimize_feature_set(input_data, label_data, feature_num, output_subdir_path)
+    else:
+        use_all_features(input_data, label_data, output_subdir_path)
+
+    logger.info('visualize results')
+    if (feature_num == -1):
+        feature_num = input_data.shape[1]
+    visualize_results(input_data, label_data, feature_num, output_subdir_path, config['figure_format'])
