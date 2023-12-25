@@ -13,7 +13,7 @@ def visualize_result(ys: np.ndarray, preds: np.ndarray, label: str, feature_set:
     sns.set(style='whitegrid')
     fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(6,6))
     ax.scatter(ys, preds)
-    ax.set(xlabel='preds', ylabel='true', title=f'{label}\nfeatures: {features}\n$R^2$: {r2score:.5e}\tadjusted $R^2$: {adjusted_r2score:.5e}')
+    ax.set(xlabel='preds', ylabel='true', title=f'{label}\nfeatures: {features}\n$R^2$ = {r2score:.5e}\tadjusted $R^2$ = {adjusted_r2score:.5e}')
     fig.savefig(f'{output_subdir_path}/figure/scatterplot_{label}.{figure_format}')
     
     return None
