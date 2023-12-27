@@ -2,4 +2,7 @@ input_data_path: "data/input_sample.csv"
 label_data_path: "data/label_sample.csv"
 output_dir_path: "result"
 feature_num: 3
-figure_format: "png"
+figure_settings: 
+    format: "pdf"
+    show_features: True
+    show_score: True

@@ -16,31 +16,51 @@ def read_config(config_path: str):
         config = yaml.safe_load(yml)
     
     if ('input_data_path' not in config.keys()):
-        raise KeyError('\"input data_path\" is missing')
+        raise KeyError('\'input data_path\' is missing')
     else:
         if (not is_table(config['input_data_path'])):
             raise ValueError('input data must be csv or tsv file')
     
     if ('label_data_path' not in config.keys()):
-        raise KeyError('\"label data_path\" is missing')
+        raise KeyError('\'label data_path\' is missing')
     else:
         if (not is_table(config['label_data_path'])):
             raise ValueError('label data must be csv or tsv file')
     
     if ('output_dir_path' not in config.keys()):
-        raise KeyError('\"output_dir_path\" is missing')
+        raise KeyError('\'output_dir_path\' is missing')
     
     if ('feature_num' in config.keys()):
         if (type(config['feature_num']) is not int):
-            raise ValueError('\"feature_num\" must be integer')
+            raise TypeError('\'feature_num\' must be \'int\'')
     else:
         config['feature_num'] = -1
     
-    if ('figure_format' in config.keys()):
-        if (config['figure_format'] not in ['png', 'ps', 'pdf', 'svg']):
-            raise ValueError('\"figure_format\" must be any of png, ps, pdf, svg')
+    if ('figure_settings' in config.keys()):
+        figure_settings = config['figure_settings']
+        
+        if ('format' in figure_settings.keys()):
+            if (figure_settings['format'] not in ['png', 'ps', 'pdf', 'svg']):
+                raise ValueError('\'format\' must be any of png, ps, pdf, svg')
+        else:
+            figure_settings['format'] = 'png'
+        
+        if ('show_features' in figure_settings.keys()):
+            if (type(figure_settings['show_features']) is not bool):
+                raise TypeError('\'show_features\' must be \'bool\'')
+        else:
+            figure_settings['show_features'] = True
+        
+        if ('show_score' in figure_settings.keys()):
+            if (type(figure_settings['show_score']) is not bool):
+                raise TypeError('\'show_score\' must be \'bool\'')
+        else:
+            figure_settings['show_score'] = True
+        
+        config['figure_settings'] = figure_settings
+    
     else:
-        config['figure_format'] = 'png'
+        config['figure_settings'] = {'format': 'png', 'show_features': True, 'shoe_score': True}
 
     return config
 

@@ -32,4 +32,4 @@ def main():
     logger.info('visualize results')
     if (feature_num == -1):
         feature_num = input_data.shape[1]
-    visualize_results(input_data, label_data, feature_num, output_subdir_path, config['figure_format'])
+    visualize_results(input_data, label_data, feature_num, output_subdir_path, **config['figure_settings'])

@@ -5,7 +5,7 @@ with open('LICENSE') as f:
 
 setup(
     name='LinearRegression',
-    version='1.0.0',
+    version='1.1.0',
     license=license,
     install_requires=['numpy', 'pandas', 'scikit-learn', 'matplotlib', 'seaborn', 'pyyaml'],
     packages=find_packages(where='src'),
