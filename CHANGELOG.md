@@ -9,3 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add detailed specification of figure output settings.
 ### Fixed
 - Fix typos.
+
+## [1.1.1] - 2023-12-27
+### Added
+- Make visualization memory-saving.

@@ -21,6 +21,7 @@ def visualize_result(ys: np.ndarray, preds: np.ndarray, label: str, feature_set:
     ax.scatter(ys, preds)
     ax.set(xlabel='preds', ylabel='true', title=title)
     fig.savefig(f'{output_subdir_path}/figure/scatterplot_{label}.{format}')
+    plt.close()
     
     return None
 
