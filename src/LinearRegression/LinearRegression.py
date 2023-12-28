@@ -54,8 +54,8 @@ def optimize_feature_set(input_data: pd.DataFrame, label_data: pd.DataFrame, fea
     
     for label in label_data.columns:
         log_iteration_extracted = log_iteration.query(f'label == "{label}"')
-        log_iteration_extracted.sort_values('R2score', ascending=False, inplace=False)
-        best_feature_set = log_iteration_extracted.iloc[1, :feature_num].to_list()
+        log_iteration_extracted.sort_values('R2score', ascending=False, inplace=True)
+        best_feature_set = log_iteration_extracted.iloc[0, :feature_num].to_list()
         
         best_reg, best_r2score = fit_linear_regression(input_data[best_feature_set].values, label_data[label].values)
         output_model_path = f'{output_subdir_path}/model/best_model_{label}.pkl'
