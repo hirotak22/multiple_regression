@@ -10,6 +10,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Fix typos.
 
-## [1.1.1] - 2023-12-27
-### Added
-- Make visualization memory-saving.
+## [1.1.2] - 2023-12-28
+### Fixed
+- Fix a figure display area.

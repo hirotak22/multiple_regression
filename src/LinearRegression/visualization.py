@@ -20,7 +20,7 @@ def visualize_result(ys: np.ndarray, preds: np.ndarray, label: str, feature_set:
     fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(6,6))
     ax.scatter(ys, preds)
     ax.set(xlabel='preds', ylabel='true', title=title)
-    fig.savefig(f'{output_subdir_path}/figure/scatterplot_{label}.{format}')
+    fig.savefig(f'{output_subdir_path}/figure/scatterplot_{label}.{format}', bbox_inches='tight')
     plt.close()
     
     return None
