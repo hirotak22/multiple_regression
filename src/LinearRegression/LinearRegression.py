@@ -53,7 +53,7 @@ def optimize_feature_set(input_data: pd.DataFrame, label_data: pd.DataFrame, fea
     sample_num = len(input_data)
     
     for label in label_data.columns:
-        log_iteration_extracted = log_iteration.query(f'label == "{label}"')
+        log_iteration_extracted = log_iteration.query(f'label == "{label}"').copy()
         log_iteration_extracted.sort_values('R2score', ascending=False, inplace=True)
         best_feature_set = log_iteration_extracted.iloc[0, :feature_num].to_list()
         
