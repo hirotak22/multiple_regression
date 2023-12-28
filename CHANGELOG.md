@@ -13,3 +13,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.1.2] - 2023-12-28
 ### Fixed
 - Fix a figure display area.
+- Fix figure axes.
