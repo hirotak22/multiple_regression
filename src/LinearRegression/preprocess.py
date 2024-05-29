@@ -15,52 +15,85 @@ def read_config(config_path: str):
     with open(config_path) as yml:
         config = yaml.safe_load(yml)
     
-    if ('input_data_path' not in config.keys()):
+    if 'input_data_path' not in config.keys():
         raise KeyError('\'input data_path\' is missing')
     else:
-        if (not is_table(config['input_data_path'])):
+        if not is_table(config['input_data_path']):
             raise ValueError('input data must be csv or tsv file')
     
-    if ('label_data_path' not in config.keys()):
+    if 'label_data_path' not in config.keys():
         raise KeyError('\'label data_path\' is missing')
     else:
-        if (not is_table(config['label_data_path'])):
+        if not is_table(config['label_data_path']):
             raise ValueError('label data must be csv or tsv file')
     
-    if ('output_dir_path' not in config.keys()):
-        raise KeyError('\'output_dir_path\' is missing')
-    
-    if ('feature_num' in config.keys()):
-        if (type(config['feature_num']) is not int):
+    if 'feature_num' in config.keys():
+        if type(config['feature_num']) is not int:
             raise TypeError('\'feature_num\' must be \'int\'')
     else:
         config['feature_num'] = -1
     
-    if ('figure_settings' in config.keys()):
-        figure_settings = config['figure_settings']
+    if 'cross_validation' in config.keys():
+        cv_settings = config['cross_validation']
         
-        if ('format' in figure_settings.keys()):
-            if (figure_settings['format'] not in ['png', 'ps', 'pdf', 'svg']):
-                raise ValueError('\'format\' must be any of png, ps, pdf, svg')
+        if 'savedir' not in cv_settings.keys():
+            raise KeyError('\'savedir\' is missing')
         else:
-            figure_settings['format'] = 'png'
+            if type(cv_settings['savedir']) is not str:
+                raise TypeError('\'savedir\' must be \'str\'')
         
-        if ('show_features' in figure_settings.keys()):
-            if (type(figure_settings['show_features']) is not bool):
-                raise TypeError('\'show_features\' must be \'bool\'')
+        if 'n_splits' in cv_settings.keys():
+            if type(cv_settings['n_splits']) is not int:
+                raise TypeError('\'n_splits\' must be \'int\'')
         else:
-            figure_settings['show_features'] = True
+            cv_settings['n_splits'] = 5
         
-        if ('show_score' in figure_settings.keys()):
-            if (type(figure_settings['show_score']) is not bool):
-                raise TypeError('\'show_score\' must be \'bool\'')
+        if 'shuffle' in cv_settings.keys():
+            if type(cv_settings['shuffle']) is not bool:
+                raise TypeError('\'shuffle\' must be \'bool\'')
         else:
-            figure_settings['show_score'] = True
+            cv_settings['shuffle'] = True
         
-        config['figure_settings'] = figure_settings
+        if 'seed' in cv_settings.keys():
+            if type(cv_settings['seed']) is not int:
+                raise TypeError('\'seed\' must be \'int\'')
+        else:
+            cv_settings['seed'] = 42
+        
+        config['cross_validation'] = cv_settings
     
     else:
-        config['figure_settings'] = {'format': 'png', 'show_features': True, 'shoe_score': True}
+        if 'output_dir_path' not in config.keys():
+            raise KeyError('\'output_dir_path\' is missing')
+        else:
+            if type(config['output_dir_path']) is not str:
+                raise TypeError('\'output_dir_path\' must be \'str\'')
+        
+        if 'figure_settings' in config.keys():
+            figure_settings = config['figure_settings']
+            
+            if 'format' in figure_settings.keys():
+                if figure_settings['format'] not in ['png', 'ps', 'pdf', 'svg']:
+                    raise ValueError('\'format\' must be any of png, ps, pdf, svg')
+            else:
+                figure_settings['format'] = 'png'
+            
+            if 'show_features' in figure_settings.keys():
+                if type(figure_settings['show_features']) is not bool:
+                    raise TypeError('\'show_features\' must be \'bool\'')
+            else:
+                figure_settings['show_features'] = True
+            
+            if 'show_score' in figure_settings.keys():
+                if type(figure_settings['show_score']) is not bool:
+                    raise TypeError('\'show_score\' must be \'bool\'')
+            else:
+                figure_settings['show_score'] = True
+            
+            config['figure_settings'] = figure_settings
+        
+        else:
+            config['figure_settings'] = {'format': 'png', 'show_features': True, 'shoe_score': True}
 
     return config
 
@@ -70,7 +103,7 @@ def specify_output_path(config: dict):
     output_dir_path = config['output_dir_path']
     feature_num = config['feature_num']
     
-    if (feature_num == -1):
+    if feature_num == -1:
         subdir = 'all'
     else:
         subdir = f'f_{feature_num}'
@@ -81,9 +114,9 @@ def specify_output_path(config: dict):
 def load_dataset(dataset_path: str):
     
     ext = os.path.splitext(dataset_path)[1][1:]
-    if (ext == 'csv'):
+    if ext == 'csv':
         dataset = pd.read_csv(dataset_path)
-    if (ext == 'tsv'):
+    if ext == 'tsv':
         dataset = pd.read_table(dataset_path)
     
     return dataset

@@ -15,3 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fix `optimize_feature_set`
 - Fix a figure display area.
 - Fix figure axes.
+
+## [1.2.0] - 2024-05-29
+### Added
+- Add support for Cross-Validation.

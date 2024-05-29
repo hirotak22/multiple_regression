@@ -11,9 +11,9 @@ def visualize_result(ys: np.ndarray, preds: np.ndarray, label: str, feature_set:
     features = ','.join(feature_set)
     
     title = label
-    if (show_features):
+    if show_features:
         title += f'\nfeatures: {features}'
-    if (show_score):
+    if show_score:
         title += f'\n$R^2$ = {r2score:.5e}\tadjusted $R^2$ = {adjusted_r2score:.5e}'
     
     sns.set(style='whitegrid')
@@ -28,7 +28,7 @@ def visualize_result(ys: np.ndarray, preds: np.ndarray, label: str, feature_set:
 
 def visualize_results(input_data: pd.DataFrame, label_data: pd.DataFrame, feature_num: int, output_subdir_path: str, format: str, show_features: bool, show_score: bool):
     
-    if (feature_num != -1):
+    if feature_num != -1:
         result = json.load(open(f'{output_subdir_path}/optimization_result.json'))
     else:
         result = json.load(open(f'{output_subdir_path}/result.json'))

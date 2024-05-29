@@ -5,12 +5,13 @@ with open('LICENSE') as f:
 
 setup(
     name='LinearRegression',
-    version='1.1.2',
+    version='1.2.0',
     license=license,
     install_requires=['numpy', 'pandas', 'scikit-learn', 'matplotlib', 'seaborn', 'pyyaml'],
     packages=find_packages(where='src'),
     package_dir={'': 'src'},
     entry_points={
-        "console_scripts": ["linearreg=LinearRegression.main:main"]
+        "console_scripts": ["linearreg=LinearRegression.main:linearreg",
+                            "linearreg_cv=LinearRegression.main:linearreg_cv"]
     }
 )

@@ -1,0 +1,8 @@
+input_data_path: "data/input_sample.csv"
+label_data_path: "data/label_sample.csv"
+feature_num: 3
+cross_validation: 
+    savedir: "cv_savedir"
+    n_splits: 5
+    shuffle: True
+    seed: 42
